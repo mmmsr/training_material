@@ -16,11 +16,7 @@ class PassengerResource(Resource):
 		json_data = request.get_json(force=True)
 		if not json_data:
 			   return {'message': 'No input data provided'}, 400
-		# Validate and deserialize input
-		# data, errors = passenger_schema.load(json_data)
-		# if errors:
-		# 	print('errors:', errors)
-		# 	return errors, 422
+
 		passenger = Passenger(
 			pclass=json_data['pclass'],
 			age=json_data['age'],

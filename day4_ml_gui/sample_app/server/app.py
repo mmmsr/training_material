@@ -21,14 +21,9 @@ api = Api(api_bp)
 
 
 # Routes
-# from resources.hello import HelloResource
-# from resources.category import CategoryResource
-# from resources.comment import CommentResource
 from resources.entry import EntryResource
 from resources.passenger import PassengerResource
 
-# api.add_resource(HelloResource, '/hello')
-# api.add_resource(CategoryResource, '/category')
 api.add_resource(EntryResource, '/entry')
 api.add_resource(PassengerResource, '/passenger')
 

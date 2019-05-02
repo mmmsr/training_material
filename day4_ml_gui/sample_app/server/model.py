@@ -18,7 +18,6 @@ clf = pickle.load(
 )
 
 
-
 class Entry(db.Model):
     __tablename__ = 'entries'
     id = db.Column(db.Integer, primary_key=True)
@@ -46,12 +45,7 @@ class Passenger(db.Model):
     survived = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
-        # 3, # Pclass
-        # 34.5, # Age
-        # 1, # Sex
-        # 7.8292, # Fare
-        # 1, # FamilySize
-        # 1 # Embarked
+
     def __init__(self, pclass, age, sex, fare, family_size, embarked):
         self.pclass = pclass
         self.age = age
@@ -64,7 +58,7 @@ class Passenger(db.Model):
     def predict_survival(self):
         feature_nparray = self.convert_to_nparray()
         result_nparray = clf.predict(feature_nparray)
-        return result_nparray[0]
+        return int(result_nparray[0])
 
     def convert_to_nparray(self):
         return [
@@ -77,17 +71,6 @@ class Passenger(db.Model):
                 self.embarked
             ]
         ]
-
-# class CategorySchema(ma.Schema):
-#     id = fields.Integer()
-#     name = fields.String(required=True)
-
-
-# class CommentSchema(ma.Schema):
-#     id = fields.Integer(dump_only=True)
-#     category_id = fields.Integer(required=True)
-#     comment = fields.String(required=True, validate=validate.Length(1))
-#     creation_date = fields.DateTime()
 
 
 class EntrySchema(ma.Schema):
