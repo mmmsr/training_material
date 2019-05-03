@@ -2,9 +2,6 @@ import os
 
 
 class DevelopmentConfig:
-
-    # basedir = os.path.abspath(os.path.dirname(__file__))
-
     # Flask
     DEBUG = True
 
