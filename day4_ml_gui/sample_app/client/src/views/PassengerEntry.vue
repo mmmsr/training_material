@@ -12,38 +12,14 @@
         md8
       >
         <material-card
-          color="cyan"
-          title="Edit Profile"
-          text="Complete your profile"
+          :color="color"
+          title="Passenger Entry"
+          text="Complete your entry form"
         >
           <v-form>
             <v-container py-0>
               <v-layout wrap>
-                <!-- <v-flex
-                  xs12
-                  md4
-                >
-                  <v-text-field
-                    label="Company (disabled)"
-                    disabled/>
-                </v-flex> -->
-                <!-- <v-flex
-                  xs12
-                  md4
-                >
-                  <v-text-field
-                    class="-purple-input"
-                    label="User Name"
-                  />
-                </v-flex> -->
-                <!-- <v-flex
-                  xs12
-                  md4
-                >
-                  <v-text-field
-                    label="Email Address"
-                    class="purple-input"/>
-                </v-flex> -->
+
                 <v-flex
                   xs12
                   md6
@@ -80,6 +56,26 @@
 
                 <v-flex
                   xs12
+                  md6
+                >
+                  <v-radio-group
+                    v-model="sex"
+                    label="Sex"
+                    row
+                  >
+                    <v-radio
+                      :value="0"
+                      label="Female"
+                    />
+                    <v-radio
+                      :value="1"
+                      label="Male"
+                    />
+                  </v-radio-group>
+                </v-flex>
+
+                <v-flex
+                  xs12
                   md4
                 >
                   <v-text-field
@@ -106,39 +102,18 @@
                   xs12
                   md12
                 >
-                  <v-text-field
-                    label="Adress"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    label="City"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    label="Country"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    class="purple-input"
-                    label="Postal Code"
-                    type="number"/>
-                </v-flex>
-                <v-flex xs12>
-                  <v-textarea
-                    class="purple-input"
-                    label="About Me"
-                    value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                  <v-slider
+                    v-model="fare"
+                    :hint="`You are eligible for CALSS ${pclass}`"
+                    label="Budget for fare per person"
+                    thumb-label="always"
+                    min="0"
+                    max="512"
+                    persistent-hint
+                    ticks
                   />
                 </v-flex>
+
                 <v-flex
                   xs12
                   text-xs-right
@@ -146,42 +121,40 @@
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="success"
+                    @click="onSubmit()"
                   >
-                    Update Profile
+                    Register
                   </v-btn>
                 </v-flex>
+
+                <v-snackbar
+                  :color="snackbar.color"
+                  v-model="snackbar.visible"
+                  top
+                  right
+                  dark
+                >
+                  <v-icon
+                    color="white"
+                    class="mr-3"
+                  >
+                    {{ snackbar.icon }}
+                  </v-icon>
+                  <div>{{ snackbar.text }}</div>
+                  <v-icon
+                    size="16"
+                    @click="snackbar.visible = false"
+                  >
+                    mdi-close-circle
+                  </v-icon>
+                </v-snackbar>
+
               </v-layout>
             </v-container>
           </v-form>
         </material-card>
       </v-flex>
-      <!-- <v-flex
-        xs12
-        md4
-        v-if="false"
-      >
-        <material-card class="v-card-profile">
-          <v-avatar
-            slot="offset"
-            class="mx-auto d-block"
-            size="130"
-          >
-            <img
-              src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
-            >
-          </v-avatar>
-          <v-card-text class="text-xs-center">
-            <h6 class="category text-gray font-weight-thin mb-3">CEO / CO-FOUNDER</h6>
-            <h4 class="card-title font-weight-light">Alec Thompson</h4>
-            <p class="card-description font-weight-light">Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...</p>
-            <v-btn
-              color="success"
-              round
-              class="font-weight-light"
-            >Follow</v-btn>
-          </v-card-text>
-        </material-card>
-      </v-flex> -->
+
       <v-dialog
         v-model="mapDialog"
         fullscreen
@@ -226,7 +199,6 @@
                 marginwidth="0"
               />
             </div>
-            <!-- src="https://maps.google.com/maps?q=google&t=&z=13&ie=UTF8&iwloc=&output=embed" -->
           </div>
 
           <v-card-actions>
@@ -239,7 +211,7 @@
               <v-btn
                 class="mx-0 font-weight-light"
                 color="success"
-                @click="onCloseDialog"
+                @click="onCloseMapDialog"
               >
                 Location Confirmed
               </v-btn>
@@ -253,18 +225,30 @@
 </template>
 
 <script>
+import {
+  mapState
+} from 'vuex'
+
 export default {
   //
   data: () => ({
     mapDialog: false,
+    snackbar: {
+      visible: false,
+      color: 'success',
+      icon: 'success',
+      text: ''
+    },
+    // snackbar: false,
+
     firstName: null,
     lastName: null,
-    pclass: null,
     age: null,
     sex: null,
-    fare: null,
+    fare: 0,
     familySize: null,
     embarked: 0,
+
     embarkedOptions: [
       {
         id: 0,
@@ -283,12 +267,51 @@ export default {
       }
     ]
   }),
+
+  computed: {
+    ...mapState('app', ['image', 'color']),
+    pclass () {
+      if (this.fare < 9) return 3
+      if (this.fare < 16) return 2
+      return 1
+    }
+  },
   methods: {
     onOpenMapDialog () {
       this.mapDialog = true
     },
-    onCloseDialog () {
+    onCloseMapDialog () {
       this.mapDialog = false
+    },
+    onSubmit () {
+      this.$axios.post('http://localhost:5000/api/passenger',
+        {
+          first_name: this.firstName,
+          last_name: this.lastName,
+          pclass: this.pclass,
+          age: parseInt(this.age),
+          sex: this.sex,
+          fare: this.fare,
+          family_size: parseInt(this.familySize),
+          embarked: this.embarked
+        }
+      )
+        .then(response => {
+          this.snackbar = {
+            visible: true,
+            color: 'success',
+            icon: 'mdi-check',
+            text: 'Successfully registered'
+          }
+        })
+        .catch(() => {
+          this.snackbar = {
+            visible: true,
+            color: 'negative',
+            icon: 'mdi-alert',
+            text: 'Failed to register'
+          }
+        })
     }
   }
 }

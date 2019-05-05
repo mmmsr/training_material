@@ -32,15 +32,6 @@
           </v-list-tile-title>
         </v-list-tile>
         <v-divider/>
-        <!-- <v-list-tile
-          v-if="responsive"
-        >
-          <v-text-field
-            class="purple-input search-input"
-            label="Search..."
-            color="purple"
-          />
-        </v-list-tile> -->
         <v-list-tile
           v-for="(link, i) in links"
           :key="i"
@@ -55,19 +46,6 @@
           <v-list-tile-title
             v-text="link.text"
           />
-        </v-list-tile>
-        <v-list-tile
-          disabled
-          active-class="primary"
-          class="v-list-item v-list__tile--buy"
-          to="/upgrade"
-        >
-          <v-list-tile-action>
-            <v-icon>mdi-package-up</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title class="font-weight-light">
-            Upgrade To PRO
-          </v-list-tile-title>
         </v-list-tile>
       </v-layout>
     </v-img>
@@ -84,42 +62,16 @@ import {
 export default {
   data: () => ({
     logo: './img/titanic-logo.png',
-    // logo: './img/vuetifylogo.png',
     links: [
-      // {
-      //   to: '/dashboard',
-      //   icon: 'mdi-view-dashboard',
-      //   text: 'Dashboard'
-      // },
       {
         to: '/passenger-entry',
         icon: 'mdi-account',
         text: 'Passenger Entry'
       },
       {
-        to: '/table-list',
+        to: '/passenger-list',
         icon: 'mdi-clipboard-outline',
-        text: 'Table List'
-      },
-      {
-        to: '/typography',
-        icon: 'mdi-format-font',
-        text: 'Typography'
-      },
-      {
-        to: '/icons',
-        icon: 'mdi-chart-bubble',
-        text: 'Icons'
-      },
-      {
-        to: '/maps',
-        icon: 'mdi-map-marker',
-        text: 'Maps'
-      },
-      {
-        to: '/notifications',
-        icon: 'mdi-bell',
-        text: 'Notifications'
+        text: 'Passenger List'
       }
     ],
     responsive: false

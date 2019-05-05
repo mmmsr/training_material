@@ -36,17 +36,21 @@ class Entry(db.Model):
 class Passenger(db.Model):
     __tablename__ = 'passengers'
     id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(), nullable=False)
+    last_name = db.Column(db.String(), nullable=False)
     pclass = db.Column(db.Integer, nullable=False)
     age = db.Column(db.Float(), nullable=False)
-    sex = db.Column(db.Integer, nullable=False)
+    sex = db.Column(db.Integer, nullable=False) # 'female': 0, 'male': 1
     fare = db.Column(db.Float(), nullable=False)
     family_size = db.Column(db.Integer, nullable=False)
-    embarked = db.Column(db.Integer, nullable=False)
+    embarked = db.Column(db.Integer, nullable=False) # 0:S = Southampton; 1:C = Cherbourg; 2:Q = Queenstown;
     survived = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
-    def __init__(self, pclass, age, sex, fare, family_size, embarked):
+    def __init__(self, first_name, last_name, pclass, age, sex, fare, family_size, embarked):
+        self.first_name = first_name
+        self.last_name = last_name
         self.pclass = pclass
         self.age = age
         self.sex = sex
@@ -84,6 +88,8 @@ class EntrySchema(ma.Schema):
 
 class PassengerSchema(ma.Schema):
     id = fields.Integer()
+    first_name = fields.String()
+    last_name = fields.String()
     pclass = fields.Integer(required=True)
     age = fields.Float(required=True)
     sex = fields.Integer(required=True)
@@ -91,3 +97,5 @@ class PassengerSchema(ma.Schema):
     family_size = fields.Integer(required=True)
     embarked = fields.Integer(required=True)
     survived = fields.Integer(required=True)
+    created_at = fields.DateTime()
+    updated_at = fields.DateTime()

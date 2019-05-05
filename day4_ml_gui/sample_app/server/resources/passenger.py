@@ -8,7 +8,7 @@ passenger_schema = PassengerSchema()
 class PassengerResource(Resource):
 	def get(self):
 		passengers = Passenger.query.all()
-		passengers = passenger_schema.dump(passengers).data
+		passengers = passengers_schema.dump(passengers).data
 		return {'status': 'success', 'passengers': passengers}, 200
 
 
@@ -18,6 +18,8 @@ class PassengerResource(Resource):
 			   return {'message': 'No input data provided'}, 400
 
 		passenger = Passenger(
+			first_name=json_data['first_name'],
+			last_name=json_data['last_name'],
 			pclass=json_data['pclass'],
 			age=json_data['age'],
 			sex=json_data['sex'],
