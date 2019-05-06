@@ -33,7 +33,7 @@ class PassengerResource(Resource):
 
 		result = passenger_schema.dump(passenger).data
 
-		return { "status": 'success', 'data': result }, 201
+		return { "status": 'success', 'result': result }, 201
 
 
 	def delete(self):

@@ -74,47 +74,47 @@ export default {
     loading: true,
     headers: [
       {
-        sortable: false,
+        sortable: true,
         text: 'Fist Name',
         value: 'first_name'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Last Name',
         value: 'last_name'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Sex',
         value: 'sex'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Age',
         value: 'age'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Family Size',
         value: 'family_size'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Embarked',
         value: 'embarked'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Ticket Class',
         value: 'pclass'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Fare',
         value: 'fare'
       },
       {
-        sortable: false,
+        sortable: true,
         text: 'Survived',
         value: 'survived'
       }
@@ -152,7 +152,6 @@ export default {
       this.loading = true
       this.$axios.get('http://localhost:5000/api/passenger')
         .then(response => {
-          console.log(response)
           this.items = response.data.passengers
           this.loading = false
         })

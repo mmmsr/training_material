@@ -119,8 +119,8 @@
                   text-xs-right
                 >
                   <v-btn
+                    :color="color"
                     class="mx-0 font-weight-light"
-                    color="success"
                     @click="onSubmit()"
                   >
                     Register
@@ -209,8 +209,8 @@
               text-xs-right
             >
               <v-btn
+                :color="color"
                 class="mx-0 font-weight-light"
-                color="success"
                 @click="onCloseMapDialog"
               >
                 Location Confirmed
@@ -220,6 +220,66 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-dialog
+        v-model="resultDialogContents.display"
+        hide-overlay
+      >
+        <v-card>
+
+          <v-img
+            :src="resultDialogContents.img[survived]"
+            class="white--text"
+            height="300px"
+          >
+            <v-container
+              fill-height
+              fluid
+            >
+              <v-layout fill-height>
+                <v-flex
+                  xs12
+                  align-end
+                  flexbox
+                />
+              </v-layout>
+            </v-container>
+          </v-img>
+
+          <v-card-title class="headline">
+            Result: <span :class="resultDialogContents.textClass[survived]">
+              {{ resultDialogContents.titleText[survived] }}
+            </span>
+          </v-card-title>
+
+          <v-card-text>
+            {{ resultDialogContents.bodyText[survived] }}
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer/>
+            <v-btn
+              :color="color"
+              class="mx-0 font-weight-light"
+              flat
+              @click="onTryAgain"
+            >
+              Try again
+            </v-btn>
+
+            <v-btn
+              :color="color"
+              class="mx-0 font-weight-light"
+              flat
+              @click="onGoToList"
+            >
+              Go to list
+            </v-btn>
+
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </v-layout>
   </v-container>
 </template>
@@ -233,14 +293,33 @@ export default {
   //
   data: () => ({
     mapDialog: false,
+    result: {},
+    survived: null,
+    resultDialogContents: {
+      display: false,
+      textClass: {
+        0: 'headline text-danger',
+        1: 'headline text-info'
+      },
+      img: {
+        0: 'img/dead.jpg',
+        1: 'img/survived.jpg'
+      },
+      titleText: {
+        0: 'DEAD',
+        1: 'SURVIVED'
+      },
+      bodyText: {
+        0: 'Most of the passengers with the provided features are dead',
+        1: 'Most of the passengers with the provided features are survived'
+      }
+    },
     snackbar: {
       visible: false,
       color: 'success',
       icon: 'success',
       text: ''
     },
-    // snackbar: false,
-
     firstName: null,
     lastName: null,
     age: null,
@@ -303,6 +382,8 @@ export default {
             icon: 'mdi-check',
             text: 'Successfully registered'
           }
+          this.survived = response.data.result.survived
+          this.resultDialogContents.display = true
         })
         .catch(() => {
           this.snackbar = {
@@ -312,6 +393,22 @@ export default {
             text: 'Failed to register'
           }
         })
+    },
+    onCloseResultDialog () {
+      this.resultDialogContents.display = false
+    },
+    onTryAgain () {
+      this.firstName = null
+      this.lastName = null
+      this.age = null
+      this.sex = null
+      this.fare = 0
+      this.familySize = null
+      this.embarked = 0
+      this.onCloseResultDialog()
+    },
+    onGoToList () {
+      this.$router.push('passenger-list')
     }
   }
 }
@@ -319,10 +416,8 @@ export default {
 
 <style>
 .mapouter {
-  /* text-align:right; */
-  height:100%;
+  height:300px;
   width:100%;
-  /* position: absolute; */
 }
 .gmap_canvas {
   overflow:hidden;
